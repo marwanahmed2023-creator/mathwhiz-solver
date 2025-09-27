@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Math Whiz Solver</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+<style>
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  input, button { padding: 10px; margin: 5px 0; width: 100%; font-size: 16px; }
+  #solution { margin-top: 20px; padding: 10px; border: 1px solid #ccc; background: #f9f9f9; }
+</style>
+</head>
+<body>
+
+<h1>Math Whiz Solver</h1>
+
+<input type="text" id="problem" placeholder="Enter a math problem, e.g., 2x^2 - 5x + 3 = 0">
+<button onclick="solveProblem()">Solve</button>
+
+<div id="solution"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.12.0/math.min.js"></script>
+<script>
+function solveProblem() {
+    const input = document.getElementById("problem").value;
+    let solutionText = "";
+
+    try {
+        if (/x\^2/.test(input)) {
+            const matches = input.match(/([+-]?\d*)x\^2\s*([+-]\s*\d*)x\s*([+-]\s*\d*)/);
+            if (matches) {
+                let a = parseFloat(matches[1] || 1);
+                let b = parseFloat(matches[2].replace(/\s+/g, ''));
+                let c = parseFloat(matches[3].replace(/\s+/g, ''));
+                const D = b*b - 4*a*c;
+                if (D < 0) {
+                    solutionText = "No real solutions";
+                } else {
+                    const root1 = (-b + Math.sqrt(D)) / (2*a);
+                    const root2 = (-b - Math.sqrt(D)) / (2*a);
+                    solutionText = `x = ${root1} or x = ${root2}`;
+                }
+            }
+        } else {
+            solutionText = math.evaluate(input).toString();
+        }
+    } catch(e) {
+        solutionText = "Could not solve this problem. Try a simpler format.";
+    }
+
+    document.getElementById("solution").innerHTML = `<strong>Solution:</strong> ${solutionText}`;
+    renderMathInElement(document.getElementById("solution"), {delimiters:[{left:"\\(", right:"\\)", display:false}]});
+}
+</script>
+
+</body>
+</html>
